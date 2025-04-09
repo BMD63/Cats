@@ -1,12 +1,26 @@
 import React from 'react';
+import styled from 'styled-components';
 import CatImage from './components/CatImage';
-import './App.scss';
+
+const AppContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // min-height: 100vh;
+  width: 340px;
+  height: auto;
+  margin: 10 auto;
+  padding: 10px;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
 
 const App: React.FC = () => {
   return (
-    <div className="app">
+    <AppContainer>
       <CatImage />
-    </div>
+    </AppContainer>
   );
 };
 
