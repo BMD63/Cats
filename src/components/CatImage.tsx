@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import './CatImage.scss';
+import styles from './CatImage.module.css';
 
 // Ленивая загрузка компонента CatImageDisplay
 const CatImageDisplay = lazy(() => import('./CatImageDisplay'));
@@ -50,6 +50,7 @@ const CatImage: React.FC = () => {
     if (!isEnabled) {
       setAutoRefresh(false); // Отключаем автообновление, если "Enabled" выключен
       setCatImageUrl(null); // Очищаем изображение
+      setError(null); // Очищаем ошибку
     }
   };
 
@@ -59,9 +60,9 @@ const CatImage: React.FC = () => {
   };
 
   return (
-    <div className="cat-image-container">
-      <div className="controls">
-        <label className="checkbox-label">
+    <div className={styles.catImageContainer}>
+      <div className={styles.controls}>
+        <label className={styles.checkboxLabel}>
           <input
             type="checkbox"
             checked={isEnabled}
@@ -69,7 +70,7 @@ const CatImage: React.FC = () => {
           />
           Enabled
         </label>
-        <label className="checkbox-label">
+        <label className={styles.checkboxLabel}>
           <input
             type="checkbox"
             checked={autoRefresh}
@@ -78,11 +79,15 @@ const CatImage: React.FC = () => {
           />
           Auto-refresh every 5 second
         </label>
-        <button onClick={fetchCatImage} disabled={!isEnabled}>
+        <button
+          onClick={fetchCatImage}
+          disabled={!isEnabled}
+          className={styles.button}
+        >
           GET cat
         </button>
       </div>
-      {error && <p className="error">{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
       {catImageUrl && isEnabled && (
         <Suspense fallback={<p>Loading...</p>}>
           <CatImageDisplay imageUrl={catImageUrl} />
