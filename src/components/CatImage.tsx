@@ -14,6 +14,7 @@ interface CatImageResponse {
 
 const CatImage: React.FC = () => {
   const [catImageUrl, setCatImageUrl] = useState<string | null>(null);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const [autoRefresh, setAutoRefresh] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,16 +35,25 @@ const CatImage: React.FC = () => {
   // Эффект для автообновления
   useEffect(() => {
     let intervalId: NodeJS.Timeout | undefined;
-    if (autoRefresh) {
+    if (isEnabled && autoRefresh) {
       fetchCatImage(); // Загружаем сразу при включении
       intervalId = setInterval(fetchCatImage, 5000); // Обновляем каждые 5 секунд
     }
     return () => {
       if (intervalId) clearInterval(intervalId); // Очищаем интервал при выключении
     };
-  }, [autoRefresh]);
+  }, [isEnabled, autoRefresh]);
 
-  // Обработчик для чекбокса
+  // Обработчик для чекбокса "Enabled"
+  const handleEnabledChange = (): void => {
+    setIsEnabled((prev) => !prev);
+    if (!isEnabled) {
+      setAutoRefresh(false); // Отключаем автообновление, если "Enabled" выключен
+      setCatImageUrl(null); // Очищаем изображение
+    }
+  };
+
+  // Обработчик для чекбокса "Auto-refresh"
   const handleAutoRefreshChange = (): void => {
     setAutoRefresh((prev) => !prev);
   };
@@ -51,18 +61,29 @@ const CatImage: React.FC = () => {
   return (
     <div className="cat-image-container">
       <div className="controls">
-        <label>
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={isEnabled}
+            onChange={handleEnabledChange}
+          />
+          Enabled
+        </label>
+        <label className="checkbox-label">
           <input
             type="checkbox"
             checked={autoRefresh}
             onChange={handleAutoRefreshChange}
+            disabled={!isEnabled} // Отключаем, если "Enabled" выключен
           />
-          Enable auto-refresh every 5 second
+          Auto-refresh every 5 second
         </label>
-        <button onClick={fetchCatImage}>GET cat</button>
+        <button onClick={fetchCatImage} disabled={!isEnabled}>
+          GET cat
+        </button>
       </div>
       {error && <p className="error">{error}</p>}
-      {catImageUrl && (
+      {catImageUrl && isEnabled && (
         <Suspense fallback={<p>Loading...</p>}>
           <CatImageDisplay imageUrl={catImageUrl} />
         </Suspense>

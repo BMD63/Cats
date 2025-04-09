@@ -5,7 +5,6 @@ import './App.scss';
 const App: React.FC = () => {
   return (
     <div className="app">
-      <h1>Cat Image App</h1>
       <CatImage />
     </div>
   );
