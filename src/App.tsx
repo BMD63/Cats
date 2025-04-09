@@ -6,10 +6,9 @@ const AppContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  // min-height: 100vh;
   width: 340px;
   height: auto;
-  margin: 10 auto;
+  margin: 10px auto;
   padding: 10px;
   margin: 0 auto;
   background-color: #fff;
